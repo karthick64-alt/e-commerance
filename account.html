@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Account Dashboard • ShopSphere</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🛒%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .account-dashboard {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 3rem;
+      max-width: 1400px;
+      margin: 3rem auto;
+      padding: 0 3rem;
+    }
+
+    .account-sidebar {
+      background: #fff;
+      border-radius: 1rem;
+      padding: 3rem 2.5rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      height: fit-content;
+      position: sticky;
+      top: 120px;
+    }
+
+    .user-profile-card {
+      text-align: center;
+      padding-bottom: 3rem;
+      border-bottom: 2px solid #e5e7eb;
+      margin-bottom: 3rem;
+    }
+
+    .user-avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3.5rem;
+      margin: 0 auto 1.5rem;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .user-name {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #1f2933;
+      margin-bottom: 0.75rem;
+    }
+
+    .user-email {
+      color: #6b7280;
+      font-size: 0.95rem;
+    }
+
+    .sidebar-menu {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar-menu li {
+      margin-bottom: 0.75rem;
+    }
+
+    .sidebar-menu a {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1.125rem 1.25rem;
+      color: #6b7280;
+      text-decoration: none;
+      border-radius: 0.75rem;
+      transition: all 0.2s ease;
+      font-weight: 500;
+    }
+
+    .sidebar-menu a:hover,
+    .sidebar-menu a.active {
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(37, 99, 235, 0.05) 100%);
+      color: #2563eb;
+    }
+
+    .sidebar-menu a span {
+      font-size: 1.25rem;
+    }
+
+    .account-content {
+      display: flex;
+      flex-direction: column;
+      gap: 3rem;
+    }
+
+    .dashboard-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+      padding: 4rem 3.5rem;
+      border-radius: 1.25rem;
+      box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+    }
+
+    .dashboard-header h1 {
+      font-size: 2.75rem;
+      margin-bottom: 1rem;
+      color: #fff;
+    }
+
+    .dashboard-header p {
+      font-size: 1.2rem;
+      opacity: 0.95;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 2rem;
+      margin-top: 0;
+    }
+
+    .stat-card {
+      background: #fff;
+      padding: 2.5rem 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      border-left: 5px solid #2563eb;
+    }
+
+    .stat-card h3 {
+      font-size: 0.95rem;
+      color: #6b7280;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .stat-card .stat-value {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #1f2933;
+    }
+
+    .content-section {
+      background: #fff;
+      padding: 3rem 2.5rem;
+      border-radius: 1.25rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .content-section h2 {
+      font-size: 1.75rem;
+      margin-bottom: 2rem;
+      color: #1f2933;
+      padding-bottom: 1.5rem;
+      border-bottom: 2px solid #e5e7eb;
+    }
+
+    .order-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 2rem 2.5rem;
+      border: 2px solid #e5e7eb;
+      border-radius: 1rem;
+      margin-bottom: 1.5rem;
+      transition: all 0.2s ease;
+    }
+
+    .order-item:hover {
+      border-color: #2563eb;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
+    }
+
+    .order-info h4 {
+      font-size: 1.25rem;
+      color: #1f2933;
+      margin-bottom: 0.75rem;
+    }
+
+    .order-info p {
+      color: #6b7280;
+      font-size: 0.95rem;
+      margin: 0.5rem 0;
+    }
+
+    .order-status {
+      padding: 0.5rem 1rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    .order-status.delivered {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .order-status.processing {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .action-btn {
+      padding: 2rem 1.5rem;
+      background: linear-gradient(135deg, #f8fafc 0%, #fff 100%);
+      border: 2px solid #e5e7eb;
+      border-radius: 1rem;
+      text-align: center;
+      text-decoration: none;
+      color: #1f2933;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .action-btn:hover {
+      border-color: #2563eb;
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, #fff 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+    }
+
+    .action-btn span {
+      font-size: 2.5rem;
+    }
+
+    .action-btn strong {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    @media (max-width: 960px) {
+      .account-dashboard {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+        padding: 0 2rem;
+        margin: 2rem auto;
+      }
+
+      .account-sidebar {
+        position: static;
+        padding: 2.5rem 2rem;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .account-dashboard {
+        padding: 0 1.5rem;
+        margin: 1.5rem auto;
+      }
+
+      .dashboard-header {
+        padding: 3rem 2rem;
+      }
+
+      .dashboard-header h1 {
+        font-size: 2rem;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+      }
+
+      .content-section {
+        padding: 2rem 1.5rem;
+      }
+
+      .order-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.5rem;
+        padding: 1.5rem;
+      }
+
+      .quick-actions {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="top-nav">
+    <div class="logo"><a href="index.html">ShopSphere</a></div>
+    <nav>
+      <a href="index.html#home">Home</a>
+      <a href="home-saas.html">SaaS Home</a>
+      <a href="categories.html">Categories</a>
+      <a href="products.html">Products</a>
+      <a href="cart.html">Cart</a>
+      <a href="account.html">Account</a>
+      <a href="support.html">Support</a>
+      <a href="login.html">Login</a>
+      <a href="register.html">Register</a>
+    </nav>
+    <div class="search-bar">
+      <input type="text" placeholder="Search orders or help" id="searchInput">
+      <button id="searchBtn" onclick="handleSearch()">Search</button>
+      <div class="search-suggestions" id="searchSuggestions"></div>
+    </div>
+  </header>
+
+  <main>
+    <div class="account-dashboard">
+      <aside class="account-sidebar">
+        <div class="user-profile-card">
+          <div class="user-avatar">👤</div>
+          <div class="user-name">John Doe</div>
+          <div class="user-email">john.doe@example.com</div>
+        </div>
+        <ul class="sidebar-menu">
+          <li><a href="#dashboard" class="active"><span>📊</span> Dashboard</a></li>
+          <li><a href="#orders"><span>📦</span> My Orders</a></li>
+          <li><a href="#wishlist"><span>❤️</span> Wishlist</a></li>
+          <li><a href="#addresses"><span>📍</span> Addresses</a></li>
+          <li><a href="#payments"><span>💳</span> Payment Methods</a></li>
+          <li><a href="#settings"><span>⚙️</span> Settings</a></li>
+          <li><a href="#returns"><span>↩️</span> Returns & Refunds</a></li>
+        </ul>
+      </aside>
+
+      <div class="account-content">
+        <div class="dashboard-header">
+          <h1>Welcome back, John!</h1>
+          <p>Here's what's happening with your account today.</p>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <h3>Total Orders</h3>
+            <div class="stat-value">24</div>
+          </div>
+          <div class="stat-card">
+            <h3>Pending Orders</h3>
+            <div class="stat-value">3</div>
+          </div>
+          <div class="stat-card">
+            <h3>Wishlist Items</h3>
+            <div class="stat-value">12</div>
+          </div>
+          <div class="stat-card">
+            <h3>Reward Points</h3>
+            <div class="stat-value">1,250</div>
+          </div>
+        </div>
+
+        <div class="content-section">
+          <h2>Recent Orders</h2>
+          <div class="order-item">
+            <div class="order-info">
+              <h4>Order #ORD-2024-001</h4>
+              <p>Placed on: March 15, 2024</p>
+              <p>Total: $299.99</p>
+            </div>
+            <div>
+              <span class="order-status delivered">Delivered</span>
+            </div>
+          </div>
+          <div class="order-item">
+            <div class="order-info">
+              <h4>Order #ORD-2024-002</h4>
+              <p>Placed on: March 18, 2024</p>
+              <p>Total: $149.50</p>
+            </div>
+            <div>
+              <span class="order-status processing">Processing</span>
+            </div>
+          </div>
+          <div class="order-item">
+            <div class="order-info">
+              <h4>Order #ORD-2024-003</h4>
+              <p>Placed on: March 20, 2024</p>
+              <p>Total: $89.99</p>
+            </div>
+            <div>
+              <span class="order-status">Shipped</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="content-section">
+          <h2>Quick Actions</h2>
+          <div class="quick-actions">
+            <a href="#" class="action-btn" onclick="handleAction('Profile')">
+              <span>👤</span>
+              <strong>Edit Profile</strong>
+            </a>
+            <a href="#" class="action-btn" onclick="handleAction('Address')">
+              <span>📍</span>
+              <strong>Add Address</strong>
+            </a>
+            <a href="#" class="action-btn" onclick="handleAction('Payment')">
+              <span>💳</span>
+              <strong>Add Payment</strong>
+            </a>
+            <a href="#" class="action-btn" onclick="handleAction('Wishlist')">
+              <span>❤️</span>
+              <strong>View Wishlist</strong>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-brand">
+      <div class="footer-logo">
+        <span class="logo-icon">🛒</span>
+        <span class="logo-text">ShopSphere</span>
+      </div>
+      <p class="footer-description">Your trusted destination for quality products and exceptional shopping experiences. Discover the best deals and latest trends.</p>
+      <div class="social">
+        <a href="#" aria-label="Facebook"><span>FB</span></a>
+        <a href="#" aria-label="Instagram"><span>IG</span></a>
+        <a href="#" aria-label="YouTube"><span>YT</span></a>
+        <a href="#" aria-label="Twitter"><span>TW</span></a>
+      </div>
+    </div>
+    <div>
+      <h3>Quick Links</h3>
+      <a href="index.html#home">Home</a>
+      <a href="categories.html">Categories</a>
+      <a href="products.html">Products</a>
+      <a href="cart.html">Shopping Cart</a>
+      <a href="account.html">My Account</a>
+    </div>
+    <div>
+      <h3>Customer Service</h3>
+      <a href="support.html">Contact Support</a>
+      <a href="#">Track Order</a>
+      <a href="#">Shipping Info</a>
+      <a href="#">Returns & Exchanges</a>
+      <a href="#">FAQ</a>
+    </div>
+    <div>
+      <h3>Policies</h3>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+      <a href="#">Returns Policy</a>
+      <a href="#">Shipping Policy</a>
+      <a href="#">Cookie Policy</a>
+    </div>
+    <div>
+      <h3>Company</h3>
+      <a href="#">About Us</a>
+      <a href="#">Careers</a>
+      <a href="#">Blog</a>
+      <a href="#">Press</a>
+      <a href="#">Partners</a>
+    </div>
+    <div class="footer-newsletter">
+      <h3>Stay Connected</h3>
+      <p>Subscribe to our newsletter for exclusive deals and updates.</p>
+      <form class="newsletter" onsubmit="handleNewsletter(event)">
+        <input type="email" placeholder="Enter your email" required id="emailInput">
+        <button type="submit">Subscribe</button>
+      </form>
+      <p class="footer-copyright">© 2024 ShopSphere. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    function handleAction(action) {
+      alert(`Opening ${action} section...`);
+      console.log(`Navigating to ${action}`);
+    }
+
+    function handleSearch() {
+      const searchTerm = document.getElementById('searchInput').value;
+      if (searchTerm.trim()) {
+        alert(`Searching for: ${searchTerm}`);
+        console.log(`Search query: ${searchTerm}`);
+      } else {
+        alert('Please enter a search term');
+      }
+    }
+
+    function handleNewsletter(event) {
+      event.preventDefault();
+      const email = document.getElementById('emailInput').value;
+      alert(`Thank you for subscribing with: ${email}`);
+      document.getElementById('emailInput').value = '';
+    }
+
+    document.getElementById('searchInput').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        handleSearch();
+      }
+    });
+
+    // Sidebar menu navigation
+    document.querySelectorAll('.sidebar-menu a').forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        document.querySelectorAll('.sidebar-menu a').forEach(a => a.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>
